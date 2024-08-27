@@ -1,0 +1,278 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="useHooks 说明" />
+
+# useHooks
+
+Hooks 是 React 中的一个特性，它允许你使用状态和其他 React 特性，而无需编写类。该网站提供了易于理解的代码示例，以帮助您了解钩子的工作原理，并激励您在下一个项目中利用它们。
+
+**代码复用，业务逻辑封装**
+
+## useHooks 列表：
+- [x] [`useHistory`](#usehistory) - 向应用添加撤消/重做功能。
+- [x] [`useDebounce`](#usedebounce) - 向应用添加撤消/重做功能。
+- [x] [`useAnimation`](#useanimation) - 允许您使用缓动函数（线性，弹性等）平滑地动画化任何值。
+- [x] [`useAsync`](#useasync) - 处理异步请求状态
+- [x] [`useMemoCompare`](#usememocompare) - 类似于 `useMemo` 的 hook，传递一个接收前、新值的自定义比较函数。
+- [x] [`useDarkMode`](#usedarkmode) - 处理向网站添加☾深色模式切换所需的所有有状态逻辑
+- [x] [`useMedia`](#usemedia) - 在组件的逻辑中使用媒体查询。
+- [x] [`useWhyDidYouUpdate`](#usewhydidyouupdate) - 查看哪些 prop 更改导致组件重新渲染
+
+DOM:
+- [x] [`useEventListener`](#useeventlistener) - 事件监听器
+- [x] [`useLockBodyScroll`](#uselockbodyscroll) - 阻止用户滚动页面正文。使用 `document.body.style.overflow = "hidden"`
+- [x] [`useWindowSize`](#usewindowsize) - 返回一个包含窗口宽度和高度的对象。监听 `window.onresize` 事件。
+- [x] [`useTheme`](#usetheme) - 使用 CSS 变量动态更改应用的外观。使用 `document.documentElement.style.setProperty`
+- [x] [`useScript`](#usescript) - 动态加载外部脚本并知道何时加载。`.addEventListener("load", ...), "load", "ready", "error"`
+- [x] [`usePrevious`](#useprevious) - 在没有生命周期方法或实例使用 `useRef` 存储前一个状态值。
+- [x] [`useOnScreen`](#useonscreen) - 检测屏幕上的元素何时可见，可见之前应看到什么元素。使用 `new IntersectionObserver`
+- [x] [`useOnClickOutside`](#useonclickoutside) - 检测指定元素外的单机事件。`document.addEventListener("mousedown", ...);`
+- [x] [`useKeyPress`](#usekeypress) - 检测用户在键盘上按下的特定键
+- [x] [`useHover`](#usehover) - 检测鼠标是否悬停在元素上，`mouseover, mouseout` 事件
+- [x] [`useEllipsis`](#useEllipsis) - 处理文本省略号
+
+TODO:
+- [x] [`usePortal`](#useportal) - 使用 React18 新特性，此 Storybook 不支持渲染
+- [ ] [`useSpring`](#usespring) - `react-spring` React 动画库的使用
+- [ ] [`useFirestoreQuery`](#usefirestorequery) - 调用 Firestore
+- [ ] [`useRequireAuth`](#userequireauth) -  查询身份验证
+- [ ] [`useAuth`](#useauth) - 待完善
+- [ ] [`useRouter`](#userouter) - 包装 React Router 的 hook，再暴露出需要的数据和方法的 hook
+
+### `useHistory`
+
+useHistory 向应用添加撤消/重做功能。
+我们的食谱是一个简单的绘图应用程序。它生成一个块网格，允许您单击任何块以切换其颜色，并使用 useHistory，以便我们可以撤消，重做或清除对画布的所有更改。
+查看我们的 CodeSandbox 演示。在我们的钩子中，我们使用useReducer来存储状态而不是useState，这对于任何使用redux的人来说都应该看起来很熟悉（在官方文档中阅读更多关于useReducer的信息）。
+钩子代码是从优秀的use-undo库中复制的，只是做了一些小的改动，所以如果你想把它拉到你的项目中，你也可以通过npm使用这个库。
+
+- [xxhomey19/use-undo](https://github.com/xxhomey19/use-undo) - 从中复制此代码的库，但进行了细微的更改。还从 hook 返回以前和将来的状态，但没有明确的操作。
+- [React useHistory hook](https://codesandbox.io/s/yv3004lqnj) - useHistory by @juice49的替代实现。
+
+### `useDebounce`
+
+此钩子允许您去掉任何快速变化的值。仅当在指定的时间段内未调用 useDebounce 挂钩时，取消取消的值才会反映最新值。
+当与 useEffect 结合使用时，正如我们在下面的配方中所做的那样，您可以轻松确保 API 调用等昂贵操作的执行频率不会太高。
+下面的示例允许您搜索 Marvel Comic API，并使用 useDebounce 来防止每次击键时都触发 API 调用。
+钩子代码和来自 github.com/xnimorz/use-debounce 的灵感。
+
+### `useAnimation`
+
+此 hook 允许您使用缓动函数（线性，弹性等）平滑地动画化任何值。
+在示例中，我们调用 useAnimation 钩子三次，以不同的间隔将三个球动画化到屏幕上。此外，我们还展示了组合钩子是多么容易。
+useAnimation hook 实际上并没有使用 useState 或 useEffect 本身，而是充当 useAnimationTimer 钩子的包装器。将计时器逻辑抽象出到它自己的钩子中，可以提高代码的可读性，并能够在其他上下文中使用计时器逻辑。
+
+### `useOnScreen`
+
+检测屏幕上的元素何时可见，并指定在屏幕上考虑之前应看到多少元素。
+非常适合延迟加载图像或在用户向下滚动到特定部分时触发动画。
+
+- 知识点：`IntersectionObserver`
+- [react-intersection-observer](https://github.com/thebuilder/react-intersection-observer) - 更健壮和可配置的实现。
+
+
+### `usePortal`
+
+需支持 react18
+
+- [react@18 升级](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#updates-to-client-rendering-apis)
+- [react portals](https://zh-hans.reactjs.org/docs/portals.html)
+- [usePortal 源码](https://github.com/alex-cory/react-useportal)
+
+### `useEventListener`
+
+如果您发现自己使用添加了很多事件侦听器，则可以考虑将该逻辑移动到自定义挂钩。
+在下面的配方中，我们创建了一个钩子，用于检查是否受支持，添加事件侦听器以及在清理时删除。
+
+[donavon/use-event-listener](https://github.com/donavon/use-event-listener) - 此钩子的原始源代码可用作库
+
+### `useLockBodyScroll`
+
+阻止用户滚动页面正文，（弹窗、移动菜单场景）
+
+[How hooks might shape design systems built in React ](https://jeremenichelli.io/2019/01/how-hooks-might-shape-design-systems-built-in-react/) - 启发了这个钩子配方的精彩博客文章。他们的 useColorSroll 钩子版本接受一个切换参数，以便更好地控制锁定状态。
+
+### `useWindowSize`
+
+返回一个包含窗口宽度和高度的对象。场景：获取浏览器窗口的当前大小。
+
+如果执行的是服务器端（无窗口对象），则宽度和高度的值将未定义。
+
+### `useMedia`
+
+此 hook 在组件逻辑中利用媒体查询变得非常容易。
+
+[useMedia v1](https://gist.github.com/gragland/ed8cac563f5df71d78f4a1fefa8c5633/c769cdc6a658b3925e9e2e204d228400d132965f) - 此配方的原始版本，在浏览器调整大小时使用单个事件侦听器。效果很好，但仅适用于屏幕宽度媒体查询。
+[Masonry Grid](https://codesandbox.io/s/26mjowzpr?from-embed) - 我们使用媒体 v1 代码的原始来源。此演示使用 react-spring 在图像更改列时进行动画处理。
+
+### `useScript`
+
+动态加载外部脚本并知道何时加载它变得非常容易。
+
+当需要与第三方库（Stripe，Google Analytics等）进行交互并且您希望在需要时加载脚本而不是将其包含在每个页面请求的文档头中时，这很有用。
+
+在示例中，我们等到脚本成功加载后再调用脚本中声明的函数。
+
+如果您有兴趣了解如果将其实现为高阶组件会是什么样子，请查看react-script-loader-hoc的源代码。我个人认为它作为钩子更具可读性。另一个优点是，因为您可以在一个组件中多次使用此钩子，我们不需要添加对加载多个脚本的支持，并且可以保持钩子逻辑的好和简单。
+
+- [react-script-loader-hoc](https://github.com/sesilio/react-script-loader-hoc/blob/master/src/index.js)
+- [类似的 hook, 但返回了与 React Suspense 的使用](https://github.com/palmerhq/the-platform#usescript)
+
+### `usePrevious`
+
+在没有生命周期方法或实例使用 useRef 存储以前的值
+
+接收以前的 props 和状态作为参数，或者更新一个实例变量 （this.previous = value） 并稍后引用它来获取以前的值。
+
+### `useOnClickOutside`
+
+检测指定元素外的单机事件
+在示例中，当单击模式之外的任何元素时，我们使用它来关闭模式。
+通过将此逻辑抽象为钩子，我们可以轻松地将其用于需要此类功能的所有组件（下拉菜单，工具提示等）。
+
+[Andarist/use-onclickoutside ](https://github.com/Andarist/use-onclickoutside) - 作为库实现的类似逻辑。还考虑了被动事件。如果你想从github / npm中提取一些东西，这是个不错的选择。
+
+### `useKeyPress`
+
+检测用户在键盘上按下的特定键
+检测何时同时按住多个键将是一个很好的补充。
+奖励积分：还要求按指定顺序持有积分。
+随意分享您在[此食谱的要点中创建的](https://gist.github.com/gragland/b61b8f46114edbcf2a9e4bd5eb9f47f5)任何内容。
+
+[useMultiKeyPress](https://codesandbox.io/s/y3qzyr3lrz) - 此配方的分叉，通过@jhsu一次检测多个键。
+
+### `useHover`
+
+检测鼠标是否悬停在元素上。钩子返回一个 ref 和一个布尔值，指示当前是否悬停具有该 ref 的元素。只需将返回的 ref 添加到要监视其悬停状态的任何元素即可。
+
+useHover 此方法的一个潜在错误：如果您有更改添加到的元素的逻辑，则事件侦听器不一定会应用于新元素。使用 useCallbackHover 替代
+
+知识点：
+- 鼠标悬停：`onMouseEnter, onMouseLeave`
+- callback ref: https://zh-hans.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
+- useCallbackHover 源码：https://gist.github.com/gragland/a32d08580b7e0604ff02cb069826ca2f
+- 社区其它实现：https://github.com/therealparmesh/use-hovering/blob/master/src/index.js 
+
+### `useEllipsis`
+
+处理文本省略号，该 hooks 返回一个 ref 绑定到需要处理文本的元素的 ref 属性上
+
+参考：
+- [`shave.js`]
+
+更多解决方案：
+- [`dotdotdot.js`]
+- [`Clamp.js`](https://github.com/josephschmitt/Clamp.js)
+
+### `useMemoCompare`
+
+类似于 `useMemo` 的 hook，但不是传递依赖项数组，而是传递一个接收前、新值的自定义比较函数。
+
+然后，compare 函数可以比较嵌套属性、调用对象方法或其他任何内容来确定相等性。如果 compare 函数返回 true，则钩子返回旧的对象引用。
+
+值得注意的是，与useMemo不同，这个钩子并不是为了避免昂贵的计算。需要向它传递一个计算值，以便它可以将其与旧值进行比较。这派上用场的地方是，如果你想向其他开发人员提供一个库，并且在将对象传递到你的库之前强制他们记住一个对象会很烦人。如果在组件正文中创建了该对象（如果它基于 props，则通常就是这种情况），那么它将是每个渲染上的新对象。如果该对象是依赖项，那么它将导致效果在每次渲染上触发，这可能导致问题甚至无限循环。此挂接允许您通过使用旧对象引用而不是新对象引用来避免这种情况（如果您的自定义比较函数认为它们相等）。
+
+更多例子：firestore-query.stories.tsx
+
+[useEffect custom comparator](https://github.com/facebook/react/issues/14476) - React Github repo 中的相关讨论，其中包含其他潜在的解决方案
+
+### `useFirestoreQuery`
+
+此 hook 可以轻松订阅 Firestore 数据库中的数据，而无需担心状态管理。
+无需调用 Firestore 的方法，只需传递查询参数，即可取回所需的所有内容。
+当数据更改时，你的组件将重新渲染，并且你的订阅将在组件卸载时自动删除。
+
+我们的示例甚至支持依赖查询，您可以通过将 falsy 值传递给钩子来等待所需的数据。
+`query.onSnapshot(), useFirestoreQuery(), status, data, error`
+
+[React Query](https://github.com/tannerlinsley/react-query) - 数据提取库，具有类似的useQuery钩子，并启发了此示例的API。
+[SWR Firestore](https://github.com/nandorojo/swr-firestore) - 在 SWR 之上构建的 Firestore 查询挂钩
+
+### `useAsync`
+
+通常，向用户展示任何异步请求的状态是一种很好的做法。例如，在呈现结果之前，从 API 获取数据并显示加载状态。
+
+另一个示例是一个表单，您希望在提交挂起时禁用提交按钮，然后在提交完成时显示成功或错误消息。
+
+可以将 `useAsync` 作为异步函数的入参，并返回正确更新UI所需的状态和值。
+prop 的可能值为：“idle 空闲”、“pending 挂起”、“success 成功”、“error 错误”。
+
+`useAsync` 返回： `useState value error status status execute`
+
+[useSubmit](https://medium.com/javascript-in-plain-english/react-custom-hook-useonesubmit-b10be17245d8) - Murat Catal的原始钩子，启发了这个食谱
+[SWR](https://swr.now.sh/) - 用于远程数据获取的 React Hooks 库。类似的概念，但包括缓存，自动重新取和许多其他漂亮的功能。
+[react-async](https://github.com/async-library/react-async) - 用于声明性承诺解析和数据获取的 React 组件和钩子。
+
+### `useRequireAuth`
+
+结合：`useAuth`, `useRouter`
+
+一个常见的需求是，如果用户已注销并尝试查看应要求他们进行身份验证的页面，则重定向用户。
+此示例显示了如何轻松编写我们的 useAuth 和使用路由器钩子来创建一个实现此目的的新钩子。
+当然，此功能可以直接添加到我们的钩子中，但是我们需要使该钩子知道我们的路由器逻辑。
+使用钩子组合的强大功能，我们可以使其他两个钩子尽可能简单，并在需要重定向时利用我们的新钩子。
+
+### `useAuth`
+
+场景：根据用户是否登录呈现不同的组件
+
+它使任何组件都能获得当前身份验证状态，并在更改时重新呈现。
+hook 的每个实例都不是获取当前用户，而是简单地调用从组件树中更远的地方获取数据。
+真正的魔力发生在 component 和 hook 中，它包装了我们所有的身份验证方法（在本例中，我们使用Firebase），
+然后使用 React Context 使当前身份验证对象可供调用 的所有子组件使用。
+
+抽象了身份验证提供商（Firebase），使得将来更改提供商变得非常容易。
+
+### `useSpring`
+
+这个 hook 是 `react-spring` 动画库的一部分，它允许高性能的基于物理的动画。
+react-spring 允许在使用动画时完全跳过 React 渲染周期，这通常会带来相当大的性能提升。
+
+在示例中，我们渲染一排卡片，并在任何给定的卡片上应用与鼠标位置相关的弹性动画效果。
+为了实现这项工作，我们调用了 useSpring 钩子，其中包含我们想要动画化的值数组，
+呈现一个 animated.div 组件（由 react-spring 导出），使用 onMouseMove 事件获取卡片上的鼠标位置，
+然后调用 setAnimatedProps（钩子返回的函数）以根据鼠标位置更新该组值。
+
+[react-spring](http://react-spring.surge.sh/) - 官方文档，其中包含许多有趣的动画示例。请参阅此处有关使用弹簧钩的部分。
+[Card Demo](https://codesandbox.io/s/j1zol1nrq3) - 原始的 useSpring 演示，我的代码基于0xca0a。
+[Scroll Animation Demo](https://codesandbox.io/s/py912w5k6m) - 另一个使用弹簧演示，通过0xca0a对滚动进行动画处理。
+[useAnimation](#useanimation) - 我之前发布的动画钩子配方，没有依赖项。不会那么高性能，并且基于时间而不是基于物理。
+
+### `useTheme`
+
+此 hook 可以轻松使用 CSS 变量动态更改应用的外观。
+
+只需传入一个包含要更新的CSS变量的键/值对的对象，hook 就会更新文档根元素中的每个变量。
+这在无法内联定义样式（没有伪类支持）并且样式排列太多而无法在样式表中包含每个主题（例如允许用户自定义其配置文件外观的 Web 应用）的情况下非常有用。
+值得注意的是，许多 css-in-js 库都支持开箱即用的动态样式，但尝试如何使用 CSS 变量和 React Hook 来完成此操作是很有趣的。
+下面的示例故意非常简单，但您可以想象主题对象存储在状态中或从API中提取。
+
+[CSS Variables and React](https://medium.com/geckoboard-under-the-hood/how-we-made-our-product-more-personalized-with-css-variables-and-react-b29298fde608) - Dan Bahrami的博客文章启发了这个食谱。
+
+
+
+### `useDarkMode`
+
+处理向网站添加☾深色模式切换所需的所有有状态逻辑。它利用 localStorage 来记住用户选择的模式，默认使用媒体查询的浏览器或操作系统级别设置，并管理 className on 的设置以应用样式。
+
+hook composed
+状态到本地存储的同步由我们的 useLocalStorage 钩子处理。
+检测用户的深色模式首选项由我们的 useMedia hook 处理。
+
+[donavon/use-dark-mode](https://github.com/donavon/use-dark-mode) - 此钩子的更可配置实现，可跨浏览器选项卡同步更改并处理 SSR。为这篇文章提供了许多代码和灵感。
+
+### `useWhyDidYouUpdate`
+
+轻松查看哪些 prop 更改导致组件重新渲染。
+如果一个函数的运行成本特别高，并且您知道它在给定相同道具的情况下呈现相同的结果，
+则可以使用更高阶的组件，就像我们在下面的示例中对组件所做的那样。
+在这种情况下，如果您仍然看到似乎不必要的重新渲染，则可以放入钩子并检查控制台，以查看哪些道具在渲染之间发生了变化，并查看其先前/当前值。
+
+[idea and original code](https://twitter.com/brunolemos/status/1090377532845801473)
+
+### `useRouter`
+
+包装 React Router 的 hook，再暴露出需要的数据和方法的 hook。
+
+展示了组合多个钩子并将其返回状态合并到单个对象中是多么容易。对于像 React Router 这样的库来说，提供一系列低级钩子是非常有意义的，因为仅使用你需要的钩子可以最大限度地减少不必要的重新渲染。也就是说，有时你想要更简单的开发人员体验，而自定义钩子使这变得容易。
+

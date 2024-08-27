@@ -1,0 +1,33 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="useHover 说明" />
+
+<div style={{
+    padding: '20px',
+    margin: '-20px',
+    color: '#fff', 
+    backgroundColor: '#00d1b2', 
+    backgroundImage: 'linear-gradient(141deg,#009e6c 0,#00d1b2 71%,#00e7eb 100%)'
+}}>
+
+# useHover
+
+检测鼠标是否悬停在元素上。钩子返回一个 ref 和一个布尔值，指示当前是否悬停具有该 ref 的元素。只需将返回的 ref 添加到要监视其悬停状态的任何元素即可。
+
+useHover 此方法的一个潜在错误：如果您有更改添加到的元素的逻辑，则事件侦听器不一定会应用于新元素。使用 useCallbackHover 替代
+
+</div>
+
+<div style={{ 
+    padding: '20px',
+    margin: '-20px',
+    backgroundColor: '#e9fffc'
+}}>
+
+知识点：
+- 鼠标悬停：`onMouseEnter, onMouseLeave`
+- callback ref: https://zh-hans.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
+- useCallbackHover 源码：https://gist.github.com/gragland/a32d08580b7e0604ff02cb069826ca2f
+- 社区其它实现：https://github.com/therealparmesh/use-hovering/blob/master/src/index.js 
+
+</div>
